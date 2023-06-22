@@ -3,6 +3,7 @@
 \usepackage{amsthm, amssymb, mathtools, esdiff,stmaryrd, tcolorbox, bbm,float, physics}
 \usepackage{tikz-cd}
 \usepackage[export]{adjustbox}
+\usepackage{hyperref}
 
 \title{Measure theory notes}
 \author{jyl20 }
@@ -65,7 +66,7 @@
 \section{Comparison over different target distributions}
 Different sampling methods, namely Metropolis-Hastings with a Gaussian random walk proposal (RW), MALA and ULA, are used to sample repeatedly from different target distributions. The target distributions are mixtures of Gaussians. For a certain point in time, the Wasserstein metric between the true distribution and the sampling distribution is approximated empirically by computing the Wasserstein metric between the uniform distribution over $k$ consecutive samples from the chain and $k$ independent samples from the target distribution. The above is repeated at various points in time to illustrate how the distance changes with time.
 \\\\
-Since each run is highly variable, the above is repeated to give a confidence interval for the estimated distance. The banded region shows the region which is within one standard deviation of the mean distance.
+Since each run is highly variable, the above is repeated for a number of independent runs to give a confidence interval for the estimated distance. On each run, the chain is initialised at a random point picked uniformly from $(-10, 0)$. The banded region shows the region which is within one standard deviation of the mean distance.
 \\\\
 To investigate the behaviour at different points in time, different plots are made for the burnin period (first 200 samples) and the 1000 samples after that. The choice of $k$, number of samples used to estimate the Wasserstein metric, is different for the burnin period and the next 1000 samples so the distances cannot be compared directly.
 
@@ -84,23 +85,23 @@ To investigate the behaviour at different points in time, different plots are ma
 \end{tabular}
 }
 \newpage
-It seems that across the three targets, random walk performs the best, followed closely by ULA and MALA seems to perform substantially worse.
+It seems that across the three targets, random walk performs the best, followed closely by ULA. MALA seems to perform substantially worse.
 \\\\
+This is a bit surprising because
 
+\begin{itemize}
+	\item MALA and ULA are similar in the sense that they are both gradient based
+	
+	\item MALA and RW are similar in the sense that they are metropolis-based
+\end{itemize}
+Maybe the difference is that MALA gets stuck at local maxima as shown later.
+\\\\
 TODO: 
 \begin{enumerate}
 	\item Check whether the method of computing empirical Wasserstein metric using consecutive samples from the same run actually make sense
-	
-	\item Think about why there is a big difference between MALA and the other two methods while ULA and RW are quite similar despite the fact that 
-	
-	\begin{itemize}
-		\item MALA and ULA are similar in the sense that they are both gradient based
-		
-		\item MALA and RW are similar in the sense that they are metropolis-based
-	\end{itemize}
-Maybe the difference is that MALA gets stuck at local maxima as shown later
-
 \end{enumerate}
+
+
 \newpage
 \section{Trajectory of different sampling methods}
 In this section, the trajectory of different sampling methods are compared. The target distribution is the rightmost target pdf from the previous section:
@@ -180,7 +181,6 @@ The Wasserstein metric for different step sizes / standard deviation is computed
 \begin{remark}
 	I am not sure what to make of this plot - it seems that the bigger the step size, the lower the distance. However, since the distance is computed using samples along the same chain, this might just be indicative of the fact that larger step sizes lead to samples which are less correlated along the same chain.
 \end{remark}
-
 \subsection{Trajectories for different step sizes}
 \subsubsection{Short run}
 {\renewcommand{\arraystretch}{4}%
@@ -193,18 +193,19 @@ The Wasserstein metric for different step sizes / standard deviation is computed
 	& \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/22.png}} \\
 	& \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/23.png}} \\
 	\hline
-	
 	\multirow{3}{*}{1} & \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/11.png}} \\
 	& \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/12.png}} \\
 	& \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/13.png}} \\
 	\hline
-	
 	\multirow{3}{*}{0.5} & \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/0_51.png}} \\
-	& \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/0_52.png}} \\
-	& \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/0_53.png}} \\
-	\hline
-	
-	\multirow{3}{*}{0.25} & \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/0_251.png}} \\
+& \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/0_52.png}} \\
+& \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/0_53.png}} \\
+\hline
+\end{tabular}
+
+\begin{tabular}{|l|l|}
+\hline
+\multirow{3}{*}{0.25} & \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/0_251.png}} \\
 & \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/0_252.png}} \\
 & \multicolumn{1}{l}{\includegraphics[width=0.8\linewidth, height=0.1\linewidth, valign=m]{Different variance/0_253.png}} \\
 \hline
@@ -232,5 +233,7 @@ From the short run plots, we see that as step size increases, the histogram beco
 \\\\
 From the long run plots, we see that as step size decreases, the histogram becomes more like the target distribution, which suggests the asymptotic sampling distribution converges to the target distribution as the step size decreases.
 
+\section{Github}
+\url{https://github.com/justinlau20/Sampling}
 
 \end{document}
