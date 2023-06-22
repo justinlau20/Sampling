@@ -130,8 +130,8 @@ class MetropolisHastings:
         return ax
     
     def plot(self, **kwargs):
-        fig, axs = plt.subplots(2, 2, figsize=(15, 5))
-        plot_funcs = [self._trace_plot, self._autocorrelation_plot, self._wasserstein_distance_plot, self._hist_plot]
+        fig, axs = plt.subplots(1, 2, figsize=(15, 2.5))
+        plot_funcs = [self._trace_plot, self._hist_plot]
 
         for ax, plot_func in zip(axs.flatten(), plot_funcs):
             plot_func(ax, **kwargs)
